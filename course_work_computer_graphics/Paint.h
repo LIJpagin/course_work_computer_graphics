@@ -23,7 +23,7 @@ POINT* into_screen(Camera& camera, Face& face) {
 
 void fill(HDC& hdc, POINT* face, COLORREF color) {
 		HBRUSH hBrush = CreateSolidBrush(color);
-		HPEN hPen = CreatePen(PS_DASHDOT, 2, 0xBBBBBB);
+		HPEN hPen = CreatePen(PS_DASHDOT, 1, color);
 		SetBkColor(hdc, color);
 		SelectObject(hdc, hBrush);
 		SelectObject(hdc, hPen);
@@ -38,12 +38,27 @@ void paint(HDC& hdc, BSPnode* root, Camera& camera) {
 	if (view_sign > EPS) paint(hdc, root->right, camera);
 	else paint(hdc, root->left, camera);
 	while (root->faces.size()) {
-		Face face = root->faces.back();
-		root->faces.pop_back();
-		fill(hdc, into_screen(camera, face), 0xffffff);
+		Face face = root->faces.front();
+		root->faces.erase(root->faces.begin());
+		fill(hdc, into_screen(camera, face), face.get_color());
 	}
 	if (view_sign > EPS) paint(hdc, root->left, camera);
 	else paint(hdc, root->right, camera);
+}
+
+void shadow(HDC& hdc, Camera& camera, std::vector <Face>& faces, Vector4D light, float ground, COLORREF color_shadow) {
+	for (int i = 0; i < faces.size(); i++) {
+		Face shadow;
+		Vector4D* shadow_points = shadow.get_points();
+		Vector4D* face_points = faces[i].get_points();
+		for (int j = 0; j < 3; j++) {
+			float t = (ground - face_points[j].z()) / light.z();
+			shadow_points[j].set_x(face_points[j].x() + t * light.x());
+			shadow_points[j].set_y(face_points[j].y() + t * light.y());
+			shadow_points[j].set_z(ground);
+		}
+		fill(hdc, into_screen(camera, shadow), color_shadow);
+	}
 }
 
 #endif // PAINT_H

@@ -22,7 +22,7 @@ public:
 	bool left_button_pressed = false;
 
 	void createObjects() {
-		Camera camera1(WidthWndClass, HeightWndClass, Vector4D(0, 0, 10, 1));
+		Camera camera1(WidthWndClass, HeightWndClass, Vector4D(0, 0, 5, 1));
 		cameras.push_back(camera1);
 		Object3D object1;
 		object1.cube();
@@ -33,9 +33,10 @@ public:
 		std::vector <Face> all_faces;
 		for (int i = 0; i < objects.size(); i++) {
 			std::vector <Face> object_faces = objects[i].get_faces();
-			std::copy(object_faces.begin(), object_faces.end(), std::back_inserter(all_faces));
+			all_faces.insert(all_faces.end(), std::make_move_iterator(object_faces.begin()),
+				std::make_move_iterator(object_faces.end()));
 		}
-
+		shadow(hdc, cameras[0], all_faces, Vector4D(1, 1, 10), -5, 0x222222);
 		BSPnode* root = new BSPnode;
 		build_bsp_tree(root, all_faces);
 		paint(hdc, root, cameras[0]);

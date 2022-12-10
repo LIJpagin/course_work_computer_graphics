@@ -22,8 +22,7 @@ void build_bsp_tree(BSPnode* parent_node, std::vector <Face>& faces) {
         case Location::BACK: right_vector.push_back(current_face); break;
         case Location::SPLIT:
             std::vector <Face> split_faces = current_face.split(parent_face);
-            faces.insert(faces.end(),
-                std::make_move_iterator(split_faces.begin()),
+            faces.insert(faces.end(), std::make_move_iterator(split_faces.begin()),
                 std::make_move_iterator(split_faces.end()));
             break;
         }

@@ -4,6 +4,8 @@
 #include "Vector4D.h"
 
 #include <vector>
+#include <algorithm>
+#include <windows.h>
 
 #define EPS 0.00001
 enum class Location { FRONT, INSIDE, BACK, SPLIT };
@@ -23,7 +25,7 @@ struct Plane {
     bool is_isect(Vector4D start, Vector4D end) {
         return Vector4D(a, b, c, 0).dot(end - start);
     }
-    float distance(Vector4D pt) {
+    float distance(Vector4D pt) const {
         return a * pt.x() + b * pt.y() + c * pt.z() + d;
     }
 };
@@ -31,15 +33,18 @@ struct Plane {
 class Face {
 private:
     Vector4D pt[3];
+    COLORREF color{ 0xffffff };
 
 public:
     Face() {}
-    Face(Vector4D pt1, Vector4D pt2, Vector4D pt3) : pt{ pt1, pt2, pt3 } {}
+    Face(Vector4D pt1, Vector4D pt2, Vector4D pt3, COLORREF clr = 0xffffff) : pt{ pt1, pt2, pt3 }, color(clr) {}
 
     Vector4D a() { return pt[0]; };
     Vector4D b() { return pt[1]; };
     Vector4D c() { return pt[2]; };
     Vector4D* get_points() { return pt; }
+    COLORREF get_color() { return color; }
+    void set_color(COLORREF clr) { color = clr; }
 
     Plane to_plane() {
         Vector4D n = Vector4D::cross(pt[1] - pt[0], pt[2] - pt[0]);
@@ -61,16 +66,19 @@ public:
         if (back) return Location::BACK;
         return Location::INSIDE;
     }
-    std::vector <Face> split(Face face) {
+    std::vector <Face> split(Face face) {        
         Plane plane = face.to_plane();
         std::vector <Face> faces;
-        std::vector <Vector4D> points = { pt[0], pt[1], pt[2] };
-        for (int i = 0; i < 3; i++)
-            if (plane.is_isect(pt[i], pt[(i + 1) % 3]))
-                points.insert(points.begin() + (i + 1) % 3,
-                    plane.isect(pt[i], pt[(i + 1) % 3]));
-        for (int i = 1; i < points.size() - 2; i++)
-            faces.push_back(Face(points[i - 1], points[i], points[i + 1]));
+        std::vector <Vector4D> front, back;
+        for (int  i = 0; i < 3; i++)
+            if (plane.distance(pt[i]) > 0)
+                front.push_back(pt[i]);
+            else back.push_back(pt[i]);
+        if (front.size() > back.size())
+            std::swap(front, back);
+        faces.push_back(Face(front[0], plane.isect(front[0], back[0]), plane.isect(front[0], back[1]), color));
+        faces.push_back(Face(back[0], back[1], plane.isect(back[0], front[0]), color));
+        faces.push_back(Face(back[1], plane.isect(back[0], front[0]), plane.isect(back[1], front[0]), color));
         return faces;
     }
 };

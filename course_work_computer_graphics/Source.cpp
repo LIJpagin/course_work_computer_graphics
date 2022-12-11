@@ -25,9 +25,14 @@ public:
 		Camera camera1(WidthWndClass, HeightWndClass, Vector4D(0, 0, 5, 1));
 		cameras.push_back(camera1);
 		Object3D object1;
-		object1.cube();
-		for (int i = 0; i < 2; i++)
-			objects.push_back(object1);
+		object1.parallelepiped();
+		objects.push_back(object1);
+		object1.pyramid();
+		objects.push_back(object1);
+		objects[0].rotate(45, 15, 0);
+		objects[0].translate(1, 0, 0);
+		objects[1].rotate(0, 180, 0);
+		objects[1].translate(-1, 0, 0);
 	}
 	void show(HDC hdc) {
 		std::vector <Face> all_faces;
@@ -36,13 +41,13 @@ public:
 			all_faces.insert(all_faces.end(), std::make_move_iterator(object_faces.begin()),
 				std::make_move_iterator(object_faces.end()));
 		}
-		shadow(hdc, cameras[0], all_faces, Vector4D(1, 1, 10), -5, 0x222222);
+		shadow(hdc, cameras[0], all_faces, Vector4D(0, -3, 10), -5, 0xaabdbb);
 		BSPnode* root = new BSPnode;
 		build_bsp_tree(root, all_faces);
 		paint(hdc, root, cameras[0]);
 		clear_tree(root);
 
-		SetBkColor(hdc, 0x444444);
+		SetBkColor(hdc, 0xddf1ff);
 		if (show_help_) {
 			TextOut(hdc, 10, 10, L"Управление камерами", 19);
 			TextOut(hdc, 10, 26, L"клавиши numpad - перемещение", 28);
@@ -61,7 +66,7 @@ public:
 		}
 		if (left_button_pressed) {
 			HPEN hPen;
-			hPen = CreatePen(PS_DASHDOT, 2, 0xFFFFFF);
+			hPen = CreatePen(PS_DASHDOT, 2, 0x000000);
 			SelectObject(hdc, hPen);
 			MoveToEx(hdc, WidthWndClass / 2 - 10, HeightWndClass / 2, NULL);
 			LineTo(hdc, WidthWndClass / 2 + 10, HeightWndClass / 2);
@@ -134,13 +139,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT messg, WPARAM wParam, LPARAM lParam) {
 		// Закраска фоновым цветом
 		LOGBRUSH br;
 		br.lbStyle = BS_SOLID;
-		br.lbColor = 0x444444;
+		br.lbColor = 0xddf1ff;
 		HBRUSH brush;
 		brush = CreateBrushIndirect(&br);
 		FillRect(hCmpDC, &Rect, brush);
 		DeleteObject(brush);
 
-		SetTextColor(hCmpDC, 0xffffff);
+		SetTextColor(hCmpDC, 0x000000);
 		// Отрисовка
 		scene.show(hCmpDC);
 

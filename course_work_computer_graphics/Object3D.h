@@ -39,6 +39,32 @@ public:
 			Face(Vector4D(-0.5f,  0.5f, -0.5f),	Vector4D(-0.5f, -0.5f,  0.5f), Vector4D(-0.5f,  0.5f,  0.5f), 0xff00ff)
 		};
 	}
+	void parallelepiped() {
+		faces_.clear();
+		faces_ = {
+			Face(Vector4D(-1.0f,  0.5f,  0.5f),	Vector4D(-1.0f,  0.5f, -0.5f), Vector4D(-1.0f, -0.5f, -0.5f), 0xff0000),
+			Face(Vector4D(-1.0f, -0.5f, -0.5f),	Vector4D(-1.0f, -0.5f,  0.5f), Vector4D(-1.0f,  0.5f,  0.5f), 0xff0000),
+			Face(Vector4D(-1.0f, -0.5f,  0.5f),	Vector4D(-1.0f, -0.5f, -0.5f), Vector4D( 1.0f, -0.5f, -0.5f), 0x00ff00),
+			Face(Vector4D( 1.0f, -0.5f, -0.5f), Vector4D( 1.0f, -0.5f,  0.5f), Vector4D(-1.0f, -0.5f,  0.5f), 0x00ff00),
+			Face(Vector4D( 1.0f, -0.5f,  0.5f), Vector4D( 1.0f, -0.5f, -0.5f), Vector4D( 1.0f,  0.5f, -0.5f), 0x0000ff),
+			Face(Vector4D( 1.0f,  0.5f, -0.5f), Vector4D( 1.0f,  0.5f,  0.5f), Vector4D( 1.0f, -0.5f,  0.5f), 0x0000ff),
+			Face(Vector4D( 1.0f,  0.5f,  0.5f), Vector4D( 1.0f,  0.5f, -0.5f), Vector4D(-1.0f,  0.5f, -0.5f), 0x00ffff),
+			Face(Vector4D(-1.0f,  0.5f, -0.5f),	Vector4D(-1.0f,  0.5f,  0.5f), Vector4D( 1.0f,  0.5f,  0.5f), 0x00ffff),
+			Face(Vector4D( 1.0f,  0.5f,  0.5f),	Vector4D(-1.0f,  0.5f,  0.5f), Vector4D(-1.0f, -0.5f,  0.5f), 0xffff00),
+			Face(Vector4D(-1.0f, -0.5f,  0.5f), Vector4D( 1.0f, -0.5f,  0.5f), Vector4D( 1.0f,  0.5f,  0.5f), 0xffff00),
+			Face(Vector4D( 1.0f, -0.5f, -0.5f),	Vector4D(-1.0f, -0.5f, -0.5f), Vector4D(-1.0f,  0.5f, -0.5f), 0xff00ff),
+			Face(Vector4D(-1.0f,  0.5f, -0.5f),	Vector4D( 1.0f,  0.5f, -0.5f), Vector4D( 1.0f, -0.5f, -0.5f), 0xff00ff),
+		};
+	}
+	void pyramid() {
+		faces_.clear();
+		faces_ = {
+			Face(Vector4D( 0.0f,        1.0f, 0.5f), Vector4D(0.0f, 0.0f, -0.8737287f),	Vector4D(-0.8660254f, -0.5f, 0.5f), 0xff0000),
+			Face(Vector4D(-0.8660254f, -0.5f, 0.5f), Vector4D(0.0f, 0.0f, -0.8737287f),	Vector4D( 0.8660254f, -0.5f, 0.5f), 0x00ff00),
+			Face(Vector4D( 0.8660254f, -0.5f, 0.5f), Vector4D(0.0f, 0.0f, -0.8737287f),	Vector4D( 0.0f,        1.0f, 0.5f), 0x0000ff),
+			Face(Vector4D( 0.8660254f, -0.5f, 0.5f), Vector4D(0.0f, 1.0f,  0.5f),       Vector4D(-0.8660254f, -0.5f, 0.5f), 0xffff00),
+		};
+	}
 	void load_obj(const char* filename, COLORREF color = 0xffffff) {
 		std::ifstream in(filename, std::ios::in);
 		if (!in) exit(1);

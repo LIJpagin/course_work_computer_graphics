@@ -9,52 +9,49 @@
 
 class Camera {
 private:
-    Vector4D position_, forward_, up_, right_;
-    int width_ = 1600, height_ = 800;
-    float v_fov_, h_fov_ = M_PI / 3;
-    float near_plane_ = 0.1f, far_plane_ = 100;
+    Vector4D position, forward, up, right;
+    int width = 1600, height = 800;
+    float v_fov, h_fov = M_PI / 3;
+    float near_plane = 0.1f, far_plane = 100;
 
 
 public:
-    Camera(int width, int height, Vector4D position) {
-        if (width > 100 || height > 100)
-            width_ = width, height_ = height;
-        v_fov_ = h_fov_ * ((float)height_ / width_);
-        position_ = position;
-        forward_ = Vector4D(0, 0, 1, 1);
-        up_ = Vector4D(0, 1, 0, 1);
-        right_ = Vector4D(1, 0, 0, 1);
+    Camera(int w, int h, Vector4D pos) {
+        if (w > 100 || h > 100)
+            width = w, height = h;
+        v_fov = h_fov * ((float)height / width);
+        position = pos;
+        forward = Vector4D(0, 0, 1, 1);
+        up = Vector4D(0, 1, 0, 1);
+        right = Vector4D(1, 0, 0, 1);
     }
+    Vector4D get_position() { return position; }
 
-    int getWidthScreen() { return width_; }
-    int getHeightScreen() { return height_; }
-    Vector4D get_position() { return position_; }
-
-    Matrix4x4 cameraMatrix() {
+    Matrix4x4 camera_matrix() {
         Matrix4x4 transfer = Matrix4x4::transfer(
-            -position_.x(), -position_.y(), -position_.z());
+            -position.x(), -position.y(), -position.z());
         transfer(1, 3, 1);
         Matrix4x4 rotation(
-            right_.x(), up_.x(), forward_.x(), 0,
-            right_.y(), up_.y(), forward_.y(), 0,
-            right_.z(), up_.z(), forward_.z(), 0,
+            right.x(), up.x(), forward.x(), 0,
+            right.y(), up.y(), forward.y(), 0,
+            right.z(), up.z(), forward.z(), 0,
             0, 0, 0, 1);
         return (transfer * rotation);
     }
-    Matrix4x4 projectionMatrix() {
-        float m00 = 1 / tan(h_fov_ / 2);
-        float m11 = 1 / tan(v_fov_ / 2);
-        float m22 = (far_plane_ + near_plane_) / (far_plane_ - near_plane_);
-        float m32 = (-2 * near_plane_ * far_plane_) / (far_plane_ - near_plane_);
+    Matrix4x4 projection_matrix() {
+        float m00 = 1 / tan(h_fov / 2);
+        float m11 = 1 / tan(v_fov / 2);
+        float m22 = (far_plane + near_plane) / (far_plane - near_plane);
+        float m32 = (-2 * near_plane * far_plane) / (far_plane - near_plane);
         return Matrix4x4(
             m00, 0, 0, 0,
             0, m11, 0, 0,
             0, 0, m22, 1,
             0, 0, m32, 0);
     }
-    Matrix4x4 toScreenMatrix() {
-        float HW = (float)(width_ / 2);
-        float HH = (float)(height_ / 2);
+    Matrix4x4 to_screen_matrix() {
+        float HW = (float)(width / 2);
+        float HH = (float)(height / 2);
         return Matrix4x4(
             HW,  0, 0, 0,
             0, -HH, 0, 0,
@@ -63,14 +60,14 @@ public:
     }
 
     void translate(float Tx, float Ty, float Tz) {
-        position_ = position_ + forward_ * Tx;
-        position_ = position_ + right_ * Ty;
-        position_ = position_ + up_ * Tz;
+        position += forward * Tx;
+        position += right * Ty;
+        position += up * Tz;
     }
     void rotate(float Rx, float Ry, float Rz) {
-        forward_ = forward_ * Matrix4x4::rotation(Rx, Ry, Rz);
-        right_ = right_ * Matrix4x4::rotation(Rx, Ry, Rz);
-        up_ = up_ * Matrix4x4::rotation(Rx, Ry, Rz);
+        forward = forward * Matrix4x4::rotation(Rx, Ry, Rz);
+        right = right * Matrix4x4::rotation(Rx, Ry, Rz);
+        up = up * Matrix4x4::rotation(Rx, Ry, Rz);
     }
 
     ~Camera() { }

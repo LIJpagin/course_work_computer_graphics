@@ -96,7 +96,7 @@ public:
         v[2] /= vector.v[2]; v[3] /= vector.v[3];
         return *this;
     }
-    float dot(Vector4D v2) {
+    float dot(Vector4D v2) const {
         return v[0] * v2.v[0] + v[1] * v2.v[1]
             +v[2] * v2.v[2] +v[3] * v2.v[3];
     }

@@ -15,14 +15,14 @@ struct Plane {
 
     Plane(float aparam, float bparam, float cparam, float dparam = 0) :
         a(aparam), b(bparam), c(cparam), d(dparam) {}
-    Vector4D isect(Vector4D start, Vector4D end) {
+    Vector4D isect(Vector4D& start, Vector4D& end) const {
         Vector4D vector = end - start, normal = Vector4D(a, b, c, 0);
         float t = -(d + start.dot(normal)) / normal.dot(vector);
         return Vector4D(start.x() + t * vector.x(),
             start.y() + t * vector.y(),
             start.z() + t * vector.z(), 1);
     }
-    bool is_isect(Vector4D start, Vector4D end) {
+    bool is_isect(Vector4D& start, Vector4D& end) const {
         return Vector4D(a, b, c, 0).dot(end - start);
     }
     float distance(Vector4D pt) const {
@@ -37,7 +37,8 @@ private:
 
 public:
     Face() {}
-    Face(Vector4D pt1, Vector4D pt2, Vector4D pt3, COLORREF clr = 0xffffff) : pt{ pt1, pt2, pt3 }, color(clr) {}
+    Face(Vector4D pt1, Vector4D pt2, Vector4D pt3, COLORREF clr = 0xffffff) :
+        pt{ pt1, pt2, pt3 }, color(clr) {}
 
     Vector4D a() { return pt[0]; };
     Vector4D b() { return pt[1]; };
@@ -46,14 +47,14 @@ public:
     COLORREF get_color() { return color; }
     void set_color(COLORREF clr) { color = clr; }
 
-    Plane to_plane() {
+    Plane to_plane() const {
         Vector4D n = Vector4D::cross(pt[1] - pt[0], pt[2] - pt[0]);
         return Plane(n.x(), n.y(), n.z(), -pt[0].dot(n));
     }
-    Vector4D normal() {
+    Vector4D normal() const {
         return Vector4D::cross(pt[1] - pt[0], pt[2] - pt[0]);
     }
-    Location located_relative(Face face) {
+    Location located_relative(Face& face) const {
         bool front = false, back = false;
         Plane plane = face.to_plane();
         for (int i = 0; i < 3; i++) {
@@ -66,7 +67,7 @@ public:
         if (back) return Location::BACK;
         return Location::INSIDE;
     }
-    std::vector <Face> split(Face face) {        
+    std::vector <Face> split(Face& face) const {        
         Plane plane = face.to_plane();
         std::vector <Face> faces;
         std::vector <Vector4D> front, back;

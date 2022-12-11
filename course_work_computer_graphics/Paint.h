@@ -13,9 +13,9 @@ POINT* into_screen(Camera& camera, Face& face) {
 	POINT* screen_points = new POINT[3];
 	Vector4D* points = face.get_points();
 	for (size_t i = 0; i < 3; i++) {
-		points[i] = points[i] * camera.cameraMatrix() * camera.projectionMatrix();
+		points[i] = points[i] * camera.camera_matrix() * camera.projection_matrix();
 		points[i].normalization();
-		points[i] = points[i] * camera.toScreenMatrix();
+		points[i] = points[i] * camera.to_screen_matrix();
 		screen_points[i] = { (long)points[i].x(), (long)points[i].y() };
 	}
 	return screen_points;
@@ -23,7 +23,7 @@ POINT* into_screen(Camera& camera, Face& face) {
 
 void fill(HDC& hdc, POINT* face, COLORREF color) {
 		HBRUSH hBrush = CreateSolidBrush(color);
-		HPEN hPen = CreatePen(PS_DASHDOT, 1, color);
+		HPEN hPen = CreatePen(PS_DASHDOT, 1, 0x000000);
 		SetBkColor(hdc, color);
 		SelectObject(hdc, hBrush);
 		SelectObject(hdc, hPen);
@@ -46,7 +46,8 @@ void paint(HDC& hdc, BSPnode* root, Camera& camera) {
 	else paint(hdc, root->right, camera);
 }
 
-void shadow(HDC& hdc, Camera& camera, std::vector <Face>& faces, Vector4D light, float ground, COLORREF color_shadow) {
+void shadow(HDC& hdc, Camera& camera, std::vector <Face>& faces,
+	Vector4D light, float ground, COLORREF color_shadow) {
 	for (int i = 0; i < faces.size(); i++) {
 		Face shadow;
 		Vector4D* shadow_points = shadow.get_points();

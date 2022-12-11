@@ -40,6 +40,7 @@ public:
 		BSPnode* root = new BSPnode;
 		build_bsp_tree(root, all_faces);
 		paint(hdc, root, cameras[0]);
+		clear_tree(root);
 
 		SetBkColor(hdc, 0x444444);
 		if (show_help_) {

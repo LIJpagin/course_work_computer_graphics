@@ -17,26 +17,26 @@ private:
 public:
 	Object3D() {}
 	Object3D(const char* filename) { load_obj(filename); }
-	Object3D(std::vector <Face> faces) : faces_(faces) {}
+	Object3D(std::vector <Face>& faces) : faces_(faces) {}
 
-	void set_faces(std::vector <Face> faces) { faces_ = faces; }
+	void set_faces(std::vector <Face>& faces) { faces_ = faces; }
 	std::vector <Face> get_faces() { return faces_; }
 
 	void cube() {
 		faces_.clear();
 		faces_ = {
-			Face(Vector4D(-0.5f, -0.5f, 0.5f),	Vector4D(0.5f, -0.5f, 0.5f),  Vector4D(-0.5f, 0.5f, 0.5f), 0xff0000),
-			Face(Vector4D(-0.5f, 0.5f, 0.5f),	Vector4D(0.5f, -0.5f, 0.5f),  Vector4D(0.5f, 0.5f, 0.5f), 0xff0000),
-			Face(Vector4D(-0.5f, 0.5f, 0.5f),	Vector4D(0.5f, 0.5f, 0.5f),   Vector4D(-0.5f, 0.5f, -0.5f), 0x00ff00),
-			Face(Vector4D(-0.5f, 0.5f, -0.5f),  Vector4D(0.5f, 0.5f, 0.5f),	  Vector4D(0.5f, 0.5f, -0.5f), 0x00ff00),
-			Face(Vector4D(-0.5f, 0.5f, -0.5f),	Vector4D(0.5f, 0.5f, -0.5f),  Vector4D(-0.5f, -0.5f, -0.5f), 0x0000ff),
-			Face(Vector4D(-0.5f, -0.5f, -0.5f), Vector4D(0.5f, 0.5f, -0.5f),  Vector4D(0.5f, -0.5f, -0.5f), 0x0000ff),
-			Face(Vector4D(-0.5f, -0.5f, -0.5f), Vector4D(0.5f, -0.5f, -0.5f), Vector4D(-0.5f, -0.5f, 0.5f), 0x00ffff),
-			Face(Vector4D(-0.5f, -0.5f, 0.5f),	Vector4D(0.5f, -0.5f, -0.5f), Vector4D(0.5f, -0.5f, 0.5f), 0x00ffff),
-			Face(Vector4D(0.5f, -0.5f, 0.5f),	Vector4D(0.5f, -0.5f, -0.5f), Vector4D(0.5f, 0.5f, 0.5f), 0xffff00),
-			Face(Vector4D(0.5f, 0.5f, 0.5f),	Vector4D(0.5f, -0.5f, -0.5f), Vector4D(0.5f, 0.5f, -0.5f), 0xffff00),
-			Face(Vector4D(-0.5f, -0.5f, -0.5f), Vector4D(-0.5f, -0.5f, 0.5f), Vector4D(-0.5f, 0.5f, -0.5f), 0xff00ff),
-			Face(Vector4D(-0.5f, 0.5f, -0.5f),	Vector4D(-0.5f, -0.5f, 0.5f), Vector4D(-0.5f, 0.5f, 0.5f), 0xff00ff),
+			Face(Vector4D(-0.5f, -0.5f,  0.5f),	Vector4D( 0.5f, -0.5f,  0.5f), Vector4D(-0.5f,  0.5f,  0.5f), 0xff0000),
+			Face(Vector4D(-0.5f,  0.5f,  0.5f),	Vector4D( 0.5f, -0.5f,  0.5f), Vector4D( 0.5f,  0.5f,  0.5f), 0xff0000),
+			Face(Vector4D(-0.5f,  0.5f,  0.5f),	Vector4D( 0.5f,  0.5f,  0.5f), Vector4D(-0.5f,  0.5f, -0.5f), 0x00ff00),
+			Face(Vector4D(-0.5f,  0.5f, -0.5f), Vector4D( 0.5f,  0.5f,  0.5f), Vector4D( 0.5f,  0.5f, -0.5f), 0x00ff00),
+			Face(Vector4D(-0.5f,  0.5f, -0.5f), Vector4D( 0.5f,  0.5f, -0.5f), Vector4D(-0.5f, -0.5f, -0.5f), 0x0000ff),
+			Face(Vector4D(-0.5f, -0.5f, -0.5f), Vector4D( 0.5f,  0.5f, -0.5f), Vector4D( 0.5f, -0.5f, -0.5f), 0x0000ff),
+			Face(Vector4D(-0.5f, -0.5f, -0.5f), Vector4D( 0.5f, -0.5f, -0.5f), Vector4D(-0.5f, -0.5f,  0.5f), 0x00ffff),
+			Face(Vector4D(-0.5f, -0.5f,  0.5f),	Vector4D( 0.5f, -0.5f, -0.5f), Vector4D( 0.5f, -0.5f,  0.5f), 0x00ffff),
+			Face(Vector4D( 0.5f, -0.5f,  0.5f),	Vector4D( 0.5f, -0.5f, -0.5f), Vector4D( 0.5f,  0.5f,  0.5f), 0xffff00),
+			Face(Vector4D( 0.5f,  0.5f,  0.5f),	Vector4D( 0.5f, -0.5f, -0.5f), Vector4D( 0.5f,  0.5f, -0.5f), 0xffff00),
+			Face(Vector4D(-0.5f, -0.5f, -0.5f), Vector4D(-0.5f, -0.5f,  0.5f), Vector4D(-0.5f,  0.5f, -0.5f), 0xff00ff),
+			Face(Vector4D(-0.5f,  0.5f, -0.5f),	Vector4D(-0.5f, -0.5f,  0.5f), Vector4D(-0.5f,  0.5f,  0.5f), 0xff00ff)
 		};
 	}
 	void load_obj(const char* filename, COLORREF color = 0xffffff) {
